@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 props.setDataSource(files);
                 props.hideTitle(false);
                 props.setTitle("My Title for activity");
+                props.hideImageScroller(false);
                 intent.putExtra(GalleryViewActivity.ARG_GALLERY_VIEW_PROPERTIES, props);
                 startActivityForResult(intent, 100);
             }

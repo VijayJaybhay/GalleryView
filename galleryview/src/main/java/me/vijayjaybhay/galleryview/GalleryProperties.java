@@ -98,7 +98,7 @@ public class GalleryProperties implements Serializable {
         props.put(GalleryProperty.DRAWABLE_LEFT_ACTION, R.mipmap.ic_galleryview_cancel);
         props.put(GalleryProperty.DRAWABLE_RIGHT_ACTION,R.mipmap.ic_galleryview_done);
         props.put(GalleryProperty.ENABLE_IMAGE_SWIPE,true);
-        props.put(GalleryProperty.ENABLE_IMAGE_SWIPE,true);
+        props.put(GalleryProperty.HIDE_IMAGE_SCROLLER,true);
     }
     /**
      * Defines all Gallery Properties

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -76,7 +77,11 @@ public class GalleryViewActivity extends AppCompatActivity implements AdapterVie
      */
     private List<Object> mImages;
 
+    /**
+     * Represents properties of Gallery View.
+     */
     GalleryProperties properties;
+
 
     private Bitmap mSelectedImageBitmap;
     private int mSelectedImageIndex;
@@ -109,6 +114,7 @@ public class GalleryViewActivity extends AppCompatActivity implements AdapterVie
         setDataSourceProps();
         setToolbarProps();
         setTitleProps();
+        setImageScrollerProps();
     }
 
     private void setHandlers(){
@@ -167,6 +173,29 @@ public class GalleryViewActivity extends AppCompatActivity implements AdapterVie
             mTitle.setText(titleText);
     }
 
+    /**
+     * Sets behaviour of image scroller
+     */
+    private void setImageScrollerProps(){
+        boolean hideImageScroller= (boolean) properties.getProps().get(GalleryProperties.GalleryProperty.HIDE_IMAGE_SCROLLER);
+        if(hideImageScroller)
+            mBackgroundImage.setOnTouchListener(new View.OnTouchListener() {
+                boolean isShowing = false;
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+
+                    if (isShowing) {
+                        mImageContainer.setVisibility(View.GONE);
+                        isShowing=false;
+                    } else {
+                        mImageContainer.setVisibility(View.VISIBLE);
+                        isShowing=true;
+                    }
+                    return false;
+                }
+            });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -222,8 +251,9 @@ public class GalleryViewActivity extends AppCompatActivity implements AdapterVie
             setResult(Activity.RESULT_CANCELED,resIntent);
         }else if(v==mDone){
             resIntent.putExtra(KEY_SELECTED_IMAGE_INDEX,mSelectedImageIndex);
-            setResult(Activity.RESULT_OK,resIntent);
+            setResult(Activity.RESULT_OK, resIntent);
         }
         finish();
     }
+
 }
