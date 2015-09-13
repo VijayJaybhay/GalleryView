@@ -3,23 +3,24 @@ package me.vijayjaybhay.galleryview;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Jaybhay Vijay on 9/11/2015.
  */
-public class GalleryProperties {
+public class GalleryProperties implements Serializable {
     /**
      * Holds all gallery properties
      */
     private Map<GalleryProperty,Object> props;
 
-
     public GalleryProperties(){
         props=new HashMap<>();
         setDefaultGalleryProperties();
     }
+
 
     public Map<GalleryProperty, Object> getProps() {
         return props;
@@ -81,6 +82,14 @@ public class GalleryProperties {
     }
 
     /**
+     * Sets data source of gallery view
+     * @param dataSource
+     */
+    public void setDataSource(Object dataSource){
+        props.put(GalleryProperty.DATA_SOURCE,dataSource);
+    }
+
+    /**
      * Sets default properties for Gallery
      */
     private void setDefaultGalleryProperties(){
@@ -94,12 +103,14 @@ public class GalleryProperties {
     /**
      * Defines all Gallery Properties
      */
-    private enum GalleryProperty{
+    public enum GalleryProperty{
         TEXT_TITLE,
         DRAWABLE_LEFT_ACTION,
         DRAWABLE_RIGHT_ACTION,
         HIDE_TITLE,
         ENABLE_IMAGE_SWIPE,
         HIDE_IMAGE_SCROLLER,
+        DATA_SOURCE,
     }
+
 }

@@ -11,15 +11,10 @@ import java.util.List;
  * Created by Jaybhay Vijay on 9/11/2015.
  */
 public class Utils {
-    public static String getDrawablePath(){
-        return Uri.parse("android.resource://me.vijayjaybhay.galleryviewdemo/drawable").toString();
-    }
-
-    public static List<String> getDrawablePaths(){
-        String path=getDrawablePath();
-        File file=new File(path);
+    public static List<Object> getFiles(String folderPath){
+        File file=new File(folderPath);
         List<File> paths= Arrays.asList(file.listFiles());
-        List<String> res=new ArrayList<>();
+        List<Object> res=new ArrayList<>();
         for (File f:paths){
             res.add(f.getAbsolutePath());
         }
