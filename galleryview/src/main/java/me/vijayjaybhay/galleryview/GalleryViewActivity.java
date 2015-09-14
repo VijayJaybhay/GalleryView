@@ -115,6 +115,7 @@ public class GalleryViewActivity extends AppCompatActivity implements AdapterVie
         setToolbarProps();
         setTitleProps();
         setImageScrollerProps();
+        setSwipeProps();
     }
 
     private void setHandlers(){
@@ -197,34 +198,76 @@ public class GalleryViewActivity extends AppCompatActivity implements AdapterVie
             });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_gallery_view, menu);
-        return true;
-    }
+    private void setSwipeProps(){
+        boolean enableSwipe= (boolean) properties.getProps().get(GalleryProperties.GalleryProperty.ENABLE_IMAGE_SWIPE);
+        if(enableSwipe){
+            mBackgroundImage.setOnTouchListener(new OnSwipeListener(this) {
+                @Override
+                public void onSwipeRight() {
+                    if(mSelectedImageIndex>0) {
+                        setBackgroundImage(mSelectedImageIndex,getImageBitmap(mSelectedImageIndex));
+                        mSelectedImageIndex--;
+                        mImageContainer.scrollTo(mSelectedImageIndex);
+                        mImageContainer.setSelection(mSelectedImageIndex);
+                    }
+                }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+                @Override
+                public void onSwipeLeft() {
+                    if(mSelectedImageIndex<mImages.size()) {
+                        setBackgroundImage(mSelectedImageIndex,getImageBitmap(mSelectedImageIndex));
+                        mSelectedImageIndex++;
+                        mImageContainer.scrollTo(mSelectedImageIndex);
+                        mImageContainer.setSelection(mSelectedImageIndex);
+                    }
+                }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                @Override
+                public void onSwipeTop() {
+
+                }
+
+                @Override
+                public void onSwipeBottom() {
+
+                }
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return getGestureDetector().onTouchEvent(event);
+                }
+            });
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    public void setBackgroundImage(int position,Bitmap bitmap){
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_gallery_view, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+
+//        return super.onOptionsItemSelected(item);
+//    }
+
+    private void setBackgroundImage(int position,Bitmap bitmap){
         mBackgroundImage.setImageBitmap(bitmap);
         mSelectedImageBitmap=bitmap;
         mSelectedImageIndex=position;
     }
-    public Bitmap getImageBitmap(int index){
+    private Bitmap getImageBitmap(int index){
         Object dataSource=properties.getProps().get(GalleryProperties.GalleryProperty.DATA_SOURCE);
         Bitmap bitmap=null;
         if( dataSource instanceof int[]){

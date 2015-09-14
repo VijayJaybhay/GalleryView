@@ -84,5 +84,6 @@
         android:layout_above="@id/ivGalleryViewBackgroundImage"
         android:layout_alignParentBottom="true"
         android:overScrollMode="ifContentScrolls"
+        android:background="@drawable/selector_image_scroller_item"
         />
 </RelativeLayout>

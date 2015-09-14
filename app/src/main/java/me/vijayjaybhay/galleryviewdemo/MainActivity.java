@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 props.hideTitle(false);
                 props.setTitle("My Title for activity");
                 props.hideImageScroller(false);
+                props.enableSwipe(true);
                 intent.putExtra(GalleryViewActivity.ARG_GALLERY_VIEW_PROPERTIES, props);
                 startActivityForResult(intent, 100);
             }
