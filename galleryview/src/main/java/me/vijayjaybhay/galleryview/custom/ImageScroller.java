@@ -1,4 +1,4 @@
-package me.vijayjaybhay.galleryview;
+package me.vijayjaybhay.galleryview.custom;
 
 /**
  * Created by Jaybhay Vijay on 9/10/2015.

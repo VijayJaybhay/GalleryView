@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rlAndroidGalleryView"
+    android:id="@+id/gv_rl_android_gallery_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -9,11 +9,20 @@
     android:fitsSystemWindows=  "true"
     >
 
-    <ImageView
+    <!--<ImageView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:id="@+id/ivGalleryViewBackgroundImage"-->
+    <!--android:layout_below="@+id/tGalleryViewToolbar"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:scaleType="fitXY"-->
+    <!--/>-->
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/ivGalleryViewBackgroundImage"
-        android:layout_below="@+id/tGalleryViewToolbar"
+        android:id="@+id/gv_vp_gallery_view_background_adapter"
+        android:layout_below="@+id/gv_t_gallery_view_toolbar"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:scaleType="fitXY"
@@ -21,7 +30,7 @@
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:galleryview="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/tGalleryViewToolbar"
+        android:id="@+id/gv_t_gallery_view_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -37,7 +46,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/ivGalleryViewCancel"
+                android:id="@+id/gv_iv_gallery_view_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.02"
@@ -50,12 +59,12 @@
                 android:layout_weight="0.97"
                 >
                 <TextView
-                    android:id="@+id/tvGalleryViewTitle"
+                    android:id="@+id/gv_tv_gallery_view_title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Gallery View"
                     android:textSize="@dimen/abc_text_size_title_material_toolbar"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/gv_c_colorWhite"
                     android:ellipsize="end"
                     android:lines="1"
                     android:paddingBottom="5dp"
@@ -64,11 +73,12 @@
                     android:paddingRight="7dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
+                    android:gravity="center_vertical|center_horizontal"
                     />
-                </RelativeLayout>
+            </RelativeLayout>
 
             <ImageView
-                android:id="@+id/ivGalleryViewDone"
+                android:id="@+id/gv_iv_gallery_view_done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.02"
@@ -77,13 +87,15 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-    <me.vijayjaybhay.galleryview.ImageScroller
-        android:id="@+id/icGalleryViewImageContainer"
+    <me.vijayjaybhay.galleryview.custom.ImageScroller
+        android:id="@+id/gv_is_gallery_view_image_container"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_above="@id/ivGalleryViewBackgroundImage"
+        android:layout_above="@id/gv_vp_gallery_view_background_adapter"
         android:layout_alignParentBottom="true"
         android:overScrollMode="ifContentScrolls"
         android:background="@drawable/selector_image_scroller_item"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
         />
 </RelativeLayout>

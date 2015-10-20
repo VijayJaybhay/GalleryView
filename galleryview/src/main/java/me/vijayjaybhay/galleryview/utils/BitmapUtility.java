@@ -1,4 +1,4 @@
-package me.vijayjaybhay.galleryview;
+package me.vijayjaybhay.galleryview.utils;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
