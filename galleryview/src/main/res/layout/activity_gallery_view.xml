@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.02"
-                android:src="@mipmap/ic_galleryview_cancel"
+                android:src="@mipmap/gv_ic_back"
                 android:clickable="true" />
 
             <RelativeLayout
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.02"
-                android:src="@mipmap/ic_galleryview_done"
+                android:src="@mipmap/gv_ic_done"
                 android:clickable="true" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>

@@ -90,8 +90,8 @@ public class GalleryProperties implements Serializable {
     private void setDefaultGalleryProperties(){
         props.put(GalleryProperty.TEXT_TITLE,"");
         props.put(GalleryProperty.HIDE_TITLE,true);
-        props.put(GalleryProperty.DRAWABLE_LEFT_ACTION, R.mipmap.ic_galleryview_cancel);
-        props.put(GalleryProperty.DRAWABLE_RIGHT_ACTION, R.mipmap.ic_galleryview_done);
+        props.put(GalleryProperty.DRAWABLE_LEFT_ACTION, R.mipmap.gv_ic_back);
+        props.put(GalleryProperty.DRAWABLE_RIGHT_ACTION, R.mipmap.gv_ic_done);
         props.put(GalleryProperty.HIDE_IMAGE_SCROLLER,true);
     }
     /**

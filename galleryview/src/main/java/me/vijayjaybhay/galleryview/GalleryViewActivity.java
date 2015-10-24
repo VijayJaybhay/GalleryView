@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -207,8 +208,10 @@ public class GalleryViewActivity extends AppCompatActivity {
      * Sets Drawables left and right drawables of Toolbar
      */
     private void setToolbarProps() {
-        mCancel.setBackgroundResource((Integer) properties.getProps().get(GalleryProperties.GalleryProperty.DRAWABLE_LEFT_ACTION));
-        mDone.setBackgroundResource((Integer) properties.getProps().get(GalleryProperties.GalleryProperty.DRAWABLE_RIGHT_ACTION));
+        mCancel.setImageDrawable(ContextCompat.getDrawable(this,
+                (Integer) properties.getProps().get(GalleryProperties.GalleryProperty.DRAWABLE_LEFT_ACTION)));
+        mDone.setImageDrawable(ContextCompat.getDrawable(this,
+                (Integer) properties.getProps().get(GalleryProperties.GalleryProperty.DRAWABLE_RIGHT_ACTION)));
     }
 
 

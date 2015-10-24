@@ -1,36 +1,16 @@
 package me.vijayjaybhay.galleryview.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
-import me.vijayjaybhay.galleryview.BuildConfig;
 import me.vijayjaybhay.galleryview.R;
-import me.vijayjaybhay.galleryview.cache.DiskImageCache;
-import me.vijayjaybhay.galleryview.cache.DiskLruCache;
-import me.vijayjaybhay.galleryview.cache.Util;
-import me.vijayjaybhay.galleryview.utils.Utils;
-
-import static android.os.Environment.isExternalStorageRemovable;
+import me.vijayjaybhay.galleryview.cache.ImageCache;
 
 /**
  * Created by Jaybhay Vijay on 9/11/2015.
@@ -70,7 +50,7 @@ public class ImageScrollerAdapter extends BaseAdapter {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_galleryview_image, null);
         }
         imageView = (ImageView) view.findViewById(R.id.ivImageViewItem);
-        DiskImageCache.getInstance(mContext).loadBitmap(mImages.get(position),imageView);
+        ImageCache.getInstance(mContext).loadBitmap(mImages.get(position),imageView);
         return view;
     }
 

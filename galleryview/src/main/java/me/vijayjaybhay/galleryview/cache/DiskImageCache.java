@@ -78,6 +78,7 @@ public class DiskImageCache {
 
     private DiskImageCache(Context context){
         this.mContext=context;
+        new InitDiskCacheTask().execute(getDiskCacheDir(mContext,DISK_CACHE_SUBDIR));
     }
 
 
@@ -87,29 +88,6 @@ public class DiskImageCache {
         }
         return mDiskImageCache;
     }
-
-    private void setupDiskCache(){
-        new InitDiskCacheTask().execute(getDiskCacheDir(mContext,DISK_CACHE_SUBDIR));
-    }
-    /**
-     * Loads bitmap from image cache.
-     * @param item
-     * @param imageView
-     */
-    public void loadBitmap(Object item, ImageView imageView) {
-        final String imageKey = String.valueOf(item);
-
-        final Bitmap bitmap = getBitmapFromDiskCache(imageKey);
-        if (bitmap != null) {
-            imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 100, 100));
-        } else {
-            imageView.setImageResource(R.mipmap.gv_ic_image_placeholder);
-            BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-            task.execute(item);
-        }
-    }
-
-
 
     class InitDiskCacheTask extends AsyncTask<File, Void, Void> {
         @Override
@@ -127,43 +105,7 @@ public class DiskImageCache {
             return null;
         }
     }
-
-    class BitmapWorkerTask extends AsyncTask<Object, Void, Bitmap> {
-        private ImageView mImageView;
-        public BitmapWorkerTask(ImageView imageView) {
-            mImageView=imageView;
-        }
-
-        // Decode image in background.
-        @Override
-        protected Bitmap doInBackground(Object... params) {
-            final String imageKey = String.valueOf(params[0]);
-            // Check disk cache in background thread
-            Bitmap bitmap = getBitmapFromDiskCache(imageKey);
-            if (bitmap == null) { // Not found in disk cache
-                // Process as normal
-                bitmap= Utils.getBitmap(params[0], mContext);
-            }
-            // Add final bitmap to caches
-            addBitmapToCache(imageKey, bitmap);
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(final Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            ((Activity)mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mImageView.setImageBitmap(
-                            ThumbnailUtils.extractThumbnail(bitmap,100,100));
-                }
-            });
-        }
-    }
-
     public void addBitmapToCache(String key, Bitmap bitmap) {
-        // Also add to disk cache
         synchronized (mDiskCacheLock) {
             try {
                 if (mDiskLruCache != null && mDiskLruCache.get(key) == null) {
