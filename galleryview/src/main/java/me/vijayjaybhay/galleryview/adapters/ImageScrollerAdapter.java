@@ -21,10 +21,12 @@ public class ImageScrollerAdapter extends BaseAdapter {
      */
     private List<Object> mImages;
     private Context  mContext;
+    private ImageCache mImageCache;
 
     public ImageScrollerAdapter(Context mContext,List<Object> mImages){
         this.mImages=mImages;
         this.mContext=mContext;
+        mImageCache=ImageCache.getInstance(mContext);
     }
     @Override
     public int getCount() {
@@ -48,7 +50,7 @@ public class ImageScrollerAdapter extends BaseAdapter {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_galleryview_image, null);
         }
         imageView = (ImageView) view.findViewById(R.id.ivImageViewItem);
-        ImageCache.getInstance(mContext).loadBitmap(mImages.get(position),imageView);
+        mImageCache.loadBitmap(mImages.get(position),imageView);
         return view;
     }
     @Override

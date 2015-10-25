@@ -33,6 +33,10 @@ import static android.os.Environment.isExternalStorageRemovable;
 public class DiskImageCache {
 
     /**
+     * Debug TAG
+     */
+    private static final String TAG="DiskImageCache";
+    /**
      * Disk cache size. Default set to 10MB
      */
     private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
@@ -66,22 +70,33 @@ public class DiskImageCache {
      */
     private boolean mDiskCacheStarting = true;
     /**
-     *
+     * Disk Cache to get bitmaps that are cached to external storage
      */
     private DiskLruCache mDiskLruCache;
     /**
-     *
+     *Context to access application specific resources
      */
-
     private Context mContext;
+
+    /**
+     * DiskImageCache to get bitmaps from disk cache
+     */
     private static DiskImageCache mDiskImageCache;
 
+    /**
+     * Initializes disk cache.
+     * @param context Application context
+     */
     private DiskImageCache(Context context){
         this.mContext=context;
         new InitDiskCacheTask().execute(getDiskCacheDir(mContext,DISK_CACHE_SUBDIR));
     }
 
-
+    /**
+     *Initializes single instance of DiskImageCache.
+     * @param context Application context
+     * @return DiskImageCache object
+     */
     public static DiskImageCache getInstance(Context context){
         if (mDiskImageCache==null){
             mDiskImageCache=new DiskImageCache(context);
@@ -89,6 +104,9 @@ public class DiskImageCache {
         return mDiskImageCache;
     }
 
+    /**
+     * Initializes DiskImageCache Asynchronously
+     */
     class InitDiskCacheTask extends AsyncTask<File, Void, Void> {
         @Override
         protected Void doInBackground(File... params) {
@@ -105,6 +123,12 @@ public class DiskImageCache {
             return null;
         }
     }
+
+    /**
+     * Adds bitmap to disk cache
+     * @param key Key to identify bitmap
+     * @param bitmap bitmap object to be stored corresponding to key
+     */
     public void addBitmapToCache(String key, Bitmap bitmap) {
         synchronized (mDiskCacheLock) {
             try {
@@ -116,13 +140,21 @@ public class DiskImageCache {
             }
         }
     }
+
+    /**
+     * Finds bitmap corresponding to key.
+     * @param key Key corresponding to bitmap
+     * @return Bitmap object if found in disk cache otherwise return null
+     */
     public Bitmap getBitmapFromDiskCache(String key) {
         synchronized (mDiskCacheLock) {
             // Wait while disk cache is started from background thread
             while (mDiskCacheStarting) {
                 try {
                     mDiskCacheLock.wait();
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             if (mDiskLruCache != null) {
                 return getBitmap(key);
@@ -131,8 +163,14 @@ public class DiskImageCache {
         return null;
     }
 
-    // Creates a unique subdirectory of the designated app cache directory. Tries to use external
-// but if not mounted, falls back on internal storage.
+    /**
+     * Creates a unique subdirectory of the designated app cache directory. Tries to use external
+     * but if not mounted, falls back on internal storage.
+     * @param context Application context
+     * @param uniqueName Name of directory
+     * @return File object corresponding to directory
+     */
+
     public static File getDiskCacheDir(Context context, String uniqueName) {
         // Check if media is mounted or storage is built-in, if so, try and use external cache dir
         // otherwise use internal cache dir
@@ -144,8 +182,15 @@ public class DiskImageCache {
         return new File(cachePath + File.separator + uniqueName);
     }
 
+    /**
+     * Writes bitmap to the cache directory
+     * @param bitmap Bitmap object being written
+     * @param editor Disk cache editor
+     * @return true if successfully compressed
+     * @throws IOException
+     */
     private boolean writeBitmapToFile( Bitmap bitmap, DiskLruCache.Editor editor )
-            throws IOException, FileNotFoundException {
+            throws IOException {
         OutputStream out = null;
         try {
             out = new BufferedOutputStream( editor.newOutputStream( 0 ), Util.IO_BUFFER_SIZE );
@@ -157,8 +202,12 @@ public class DiskImageCache {
         }
     }
 
-
-    public void put( String key, Bitmap data ) {
+    /**
+     * Puts bitmap to disk cache
+     * @param key Key to identify bitmap
+     * @param bitmap bitmap object to be stored corresponding to key
+     */
+    public void put( String key, Bitmap bitmap ) {
 
         DiskLruCache.Editor editor = null;
         try {
@@ -167,21 +216,21 @@ public class DiskImageCache {
                 return;
             }
 
-            if( writeBitmapToFile( data, editor ) ) {
+            if( writeBitmapToFile( bitmap, editor ) ) {
                 mDiskLruCache.flush();
                 editor.commit();
-                if ( mDiskLruCache.DEBUG ) {
-                    Log.d("cache_test_DISK_", "image put on disk cache " + key);
+                if (DiskLruCache.DEBUG) {
+                    Log.d(TAG, "image put on disk cache " + key);
                 }
             } else {
                 editor.abort();
-                if ( mDiskLruCache.DEBUG ) {
-                    Log.d( "cache_test_DISK_", "ERROR on: image put on disk cache " + key );
+                if (DiskLruCache.DEBUG) {
+                    Log.d( TAG, "ERROR on: image put on disk cache " + key );
                 }
             }
         } catch (IOException e) {
             if ( BuildConfig.DEBUG ) {
-                Log.d( "cache_test_DISK_", "ERROR on: image put on disk cache " + key );
+                Log.d( TAG, "ERROR on: image put on disk cache " + key );
             }
             try {
                 if ( editor != null ) {
@@ -192,6 +241,12 @@ public class DiskImageCache {
         }
 
     }
+
+    /**
+     * Finds bitmap corresponding to key  in disk cache.
+     * @param key Key corresponding to bitmap
+     * @return Bitmap object if found in cache otherwise return null
+     */
     public Bitmap getBitmap( String key ) {
         Bitmap bitmap = null;
         DiskLruCache.Snapshot snapshot = null;
@@ -215,7 +270,7 @@ public class DiskImageCache {
             }
         }
         if ( BuildConfig.DEBUG ) {
-            Log.d( "cache_test_DISK_", bitmap == null ? "" : "image read from disk " + key);
+            Log.d( TAG, bitmap == null ? "" : "image read from disk " + key);
         }
         return bitmap;
     }

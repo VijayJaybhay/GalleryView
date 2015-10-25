@@ -18,15 +18,6 @@
     android:layout_centerHorizontal="true"
     android:scaleType="fitXY"
     />
-    <!--<android.support.v4.view.ViewPager-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/gv_vp_gallery_view_background_adapter"-->
-        <!--android:layout_below="@+id/gv_t_gallery_view_toolbar"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:scaleType="fitXY"-->
-        <!--/>-->
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:galleryview="http://schemas.android.com/apk/res-auto"

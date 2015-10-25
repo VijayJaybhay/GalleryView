@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +22,7 @@ import java.util.List;
 
 import me.vijayjaybhay.galleryview.adapters.ImageScrollerAdapter;
 import me.vijayjaybhay.galleryview.cache.DiskImageCache;
+import me.vijayjaybhay.galleryview.cache.ImageCache;
 import me.vijayjaybhay.galleryview.cache.MemoryImageCache;
 import me.vijayjaybhay.galleryview.custom.GalleryProperties;
 import me.vijayjaybhay.galleryview.custom.ImageScroller;
@@ -169,9 +172,10 @@ public class GalleryViewActivity extends AppCompatActivity {
         String imageKey=String.valueOf(mImages.get(position));
         MemoryImageCache memoryImageCache=MemoryImageCache.getInstance(GalleryViewActivity.this);
         Bitmap bitmap=memoryImageCache.getBitmapFromMemCache(imageKey);
+        ImageCache imageCache=ImageCache.getInstance(GalleryViewActivity.this);
         if(bitmap==null){
-            DiskImageCache diskImageCache=DiskImageCache.getInstance(GalleryViewActivity.this);
-            bitmap=diskImageCache.getBitmapFromDiskCache(imageKey);
+            ImageCache.BitmapWorkerTask bitmapWorkerTask = imageCache.new BitmapWorkerTask(new MyHandler(mBackgroundImage));
+            bitmapWorkerTask.execute(mImages.get(position));
         }
         mBackgroundImage.setImageBitmap(bitmap);
     }
@@ -247,5 +251,24 @@ public class GalleryViewActivity extends AppCompatActivity {
                     return false;
                 }
             });
+    }
+
+    private class MyHandler extends Handler {
+        private ImageView mImageView;
+        public MyHandler(ImageView imageView) {
+            mImageView=imageView;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            final Bitmap bitmap= (Bitmap) msg.obj;
+            mImageView.setImageBitmap(bitmap);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mImageView.setImageBitmap(bitmap);
+                }
+            });
+        }
     }
 }

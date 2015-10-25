@@ -16,16 +16,39 @@ import me.vijayjaybhay.galleryview.utils.Utils;
  * Created by Jaybhay Vijay on 10/24/2015.
  */
 public class ImageCache {
+    /**
+     * Memory Cache to get bitmaps that are available in RAM
+     */
     private  MemoryImageCache mMemoryImageCache;
+    /**
+     * Disk Cache to get bitmaps that are cached to external storage
+     */
     private DiskImageCache mDiskImageCache;
+    /**
+     * Image Cache to get bitmaps from memory or disk cache.It abstracts use of
+     * Memory cache and Disk Cache
+     */
     private static ImageCache mImageCache;
+    /**
+     * Context to access application specific resources
+     */
     private Context mContext;
+
+    /**
+     * Initializes memory cache and disk cache.
+     * @param context Application context
+     */
     private ImageCache(Context context){
         mContext=context;
         mMemoryImageCache=MemoryImageCache.getInstance(mContext);
         mDiskImageCache=DiskImageCache.getInstance(mContext);
     }
 
+    /**
+     * Initializes single instance of Image Cache.
+     * @param context Application context
+     * @return ImageCache object
+     */
     public static ImageCache getInstance(Context context){
         if(mImageCache==null){
             mImageCache=new ImageCache(context);
@@ -36,8 +59,8 @@ public class ImageCache {
     /**
      * Loads bitmap from image cache.It first check Memory Cache.If Bitmap found in Memory Cache, it will
      * return Bitmap object else it uses disk cache.
-     * @param item
-     * @param imageView
+     * @param item Image resource or image file path
+     * @param imageView Image View to which resultant bitmap needs to be set
      */
     public void loadBitmap(Object item, ImageView imageView) {
         final String imageKey = String.valueOf(item);
@@ -52,7 +75,9 @@ public class ImageCache {
     }
 
 
-
+    /**
+     * AsyncTask that caches bitmaps asynchronously and sets to corresponding image view.
+     */
     public class BitmapWorkerTask extends AsyncTask<Object, Void, Bitmap> {
         private ImageView mImageView;
         private  Handler mHandler;
