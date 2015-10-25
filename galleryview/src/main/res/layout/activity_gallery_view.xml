@@ -9,24 +9,24 @@
     android:fitsSystemWindows=  "true"
     >
 
-    <!--<ImageView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:id="@+id/ivGalleryViewBackgroundImage"-->
-    <!--android:layout_below="@+id/tGalleryViewToolbar"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:scaleType="fitXY"-->
-    <!--/>-->
-    <android.support.v4.view.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/gv_vp_gallery_view_background_adapter"
-        android:layout_below="@+id/gv_t_gallery_view_toolbar"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:scaleType="fitXY"
-        />
+    <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/gv_iv_gallery_view_background_image"
+    android:layout_below="@+id/gv_t_gallery_view_toolbar"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:scaleType="fitXY"
+    />
+    <!--<android.support.v4.view.ViewPager-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/gv_vp_gallery_view_background_adapter"-->
+        <!--android:layout_below="@+id/gv_t_gallery_view_toolbar"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:scaleType="fitXY"-->
+        <!--/>-->
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:galleryview="http://schemas.android.com/apk/res-auto"
@@ -91,7 +91,7 @@
         android:id="@+id/gv_is_gallery_view_image_container"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_above="@id/gv_vp_gallery_view_background_adapter"
+        android:layout_above="@id/gv_iv_gallery_view_background_image"
         android:layout_alignParentBottom="true"
         android:overScrollMode="ifContentScrolls"
         android:background="@drawable/selector_image_scroller_item"

@@ -26,8 +26,6 @@ public class ImageScrollerAdapter extends BaseAdapter {
         this.mImages=mImages;
         this.mContext=mContext;
     }
-
-
     @Override
     public int getCount() {
         return mImages.size();
@@ -53,7 +51,6 @@ public class ImageScrollerAdapter extends BaseAdapter {
         ImageCache.getInstance(mContext).loadBitmap(mImages.get(position),imageView);
         return view;
     }
-
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();

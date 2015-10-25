@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import java.util.List;
 import me.vijayjaybhay.galleryview.GalleryViewActivity;
+import me.vijayjaybhay.galleryview.cache.DiskImageCache;
+import me.vijayjaybhay.galleryview.cache.ImageCache;
+import me.vijayjaybhay.galleryview.cache.MemoryImageCache;
 import me.vijayjaybhay.galleryview.custom.GalleryProperties;
 import me.vijayjaybhay.galleryview.utils.BitmapUtility;
 import me.vijayjaybhay.galleryview.utils.Utils;
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 props.setDataSource(d);
                 props.hideTitle(false);
                 props.setTitle("My Title for activity");
-                props.hideImageScroller(false);
+                props.hideImageScroller(true);
                 intent.putExtra(GalleryViewActivity.ARG_GALLERY_VIEW_PROPERTIES, props);
                 startActivityForResult(intent, 100);
             }
@@ -86,8 +89,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==100){
             if(resultCode== Activity.RESULT_OK){
-                int index=data.getIntExtra(GalleryViewActivity.KEY_SELECTED_IMAGE_INDEX,0);
-                Bitmap bitmap= BitmapUtility.decodeSampledBitmapFromResource((String) files.get(index), 300, 400);
+                int index=data.getIntExtra(GalleryViewActivity.KEY_SELECTED_IMAGE_INDEX, 0);
+                String imageKey=String.valueOf(d[index]);
+                MemoryImageCache memoryImageCache=MemoryImageCache.getInstance(MainActivity.this);
+                Bitmap bitmap=memoryImageCache.getBitmapFromMemCache(imageKey);
+                if(bitmap==null){
+                    DiskImageCache diskImageCache=DiskImageCache.getInstance(MainActivity.this);
+                    bitmap=diskImageCache.getBitmapFromDiskCache(imageKey);
+                }
                 mImageView.setImageBitmap(bitmap);
 
             }else if(resultCode==Activity.RESULT_CANCELED){

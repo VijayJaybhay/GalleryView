@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,11 +18,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.vijayjaybhay.galleryview.adapters.BackgroundPagerAdapater;
 import me.vijayjaybhay.galleryview.adapters.ImageScrollerAdapter;
+import me.vijayjaybhay.galleryview.cache.DiskImageCache;
+import me.vijayjaybhay.galleryview.cache.MemoryImageCache;
 import me.vijayjaybhay.galleryview.custom.GalleryProperties;
 import me.vijayjaybhay.galleryview.custom.ImageScroller;
-import me.vijayjaybhay.galleryview.utils.Utils;
 
 
 public class GalleryViewActivity extends AppCompatActivity {
@@ -42,13 +41,13 @@ public class GalleryViewActivity extends AppCompatActivity {
      */
     public static final String KEY_SELECTED_IMAGE_INDEX="selectedImage";
     /**
-     * Default width used to scale Image
+     * Default width used to scale Image(sub-sample).Default is 300
      */
-    private static int DEFAULT_IMAGE_WIDTH=300;
+    private int requestedWidth=300;
     /**
-     * Default height used to scale Image
+     * Default height used to scale Image(sub-sample).Default is 400
      */
-    private static int DEFAULT_IMAGE_HEIGHT=400;
+    private int requestedHeight=400;
     /**
      * Toolbar for actions in activity
      */
@@ -57,8 +56,7 @@ public class GalleryViewActivity extends AppCompatActivity {
      * Background image of activity
      */
     private ImageView mBackgroundImage;
-    private ViewPager mBackgroundViewPager;
-    private PagerAdapter mBackgroundPagerAdapter;
+
     /**
      * Cancel ImageView to perform Cancel action
      */
@@ -91,9 +89,11 @@ public class GalleryViewActivity extends AppCompatActivity {
      */
     private GalleryProperties properties;
 
-
-    private Bitmap mSelectedImageBitmap;
+    /**
+     * Selected index in Data Source
+     */
     private int mSelectedImageIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,9 +104,12 @@ public class GalleryViewActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Sets references to UI elements
+     */
     private void setReferences(){
         mToolbar= (Toolbar) findViewById(R.id.gv_t_gallery_view_toolbar);
-        mBackgroundViewPager= (ViewPager) findViewById(R.id.gv_vp_gallery_view_background_adapter);
+        mBackgroundImage=(ImageView)findViewById(R.id.gv_iv_gallery_view_background_image);
         mCancel= (ImageView) findViewById(R.id.gv_iv_gallery_view_cancel);
         mDone= (ImageView) findViewById(R.id.gv_iv_gallery_view_done);
         mImageContainer= (ImageScroller) findViewById(R.id.gv_is_gallery_view_image_container);
@@ -124,15 +127,14 @@ public class GalleryViewActivity extends AppCompatActivity {
         setToolbarProps();
         setTitleProps();
         setImageScrollerProps();
+        //set first image in background image
+        loadBackgroundImage(0);
     }
 
+    /**
+     * Sets handlers
+     */
     private void setHandlers(){
-        mImageContainer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //changeImage(position);
-            }
-        });
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,32 +152,29 @@ public class GalleryViewActivity extends AppCompatActivity {
                 finish();
             }
         });
-        mBackgroundViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mImageContainer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onPageScrolled(final int position, float positionOffset, int positionOffsetPixels) {
-                mImageContainer.clearFocus();
-                mImageContainer.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mImageContainer.requestFocusFromTouch();
-                        mImageContainer.setSelection(position);
-                        mImageContainer.requestFocus();
-                    }
-                },100L);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                loadBackgroundImage(position);
             }
         });
     }
 
+    /**
+     * Loads background image from Date Source.
+     * @param position index of image in Data Source
+     */
+    private void loadBackgroundImage(int position){
+        mSelectedImageIndex=position;
+        String imageKey=String.valueOf(mImages.get(position));
+        MemoryImageCache memoryImageCache=MemoryImageCache.getInstance(GalleryViewActivity.this);
+        Bitmap bitmap=memoryImageCache.getBitmapFromMemCache(imageKey);
+        if(bitmap==null){
+            DiskImageCache diskImageCache=DiskImageCache.getInstance(GalleryViewActivity.this);
+            bitmap=diskImageCache.getBitmapFromDiskCache(imageKey);
+        }
+        mBackgroundImage.setImageBitmap(bitmap);
+    }
 
     /**
      * Sets data source for adapter
@@ -198,14 +197,11 @@ public class GalleryViewActivity extends AppCompatActivity {
             throw new IllegalArgumentException("Invalid data source");
         }
         mAdapter=new ImageScrollerAdapter(this,mImages);
-        mBackgroundPagerAdapter=new BackgroundPagerAdapater(this,mImages);
         mImageContainer.setAdapter(mAdapter);
-        mBackgroundViewPager.setAdapter(mBackgroundPagerAdapter);
-
     }
 
     /**
-     * Sets Drawables left and right drawables of Toolbar
+     * Sets left and right drawables of Toolbar
      */
     private void setToolbarProps() {
         mCancel.setImageDrawable(ContextCompat.getDrawable(this,
@@ -251,10 +247,5 @@ public class GalleryViewActivity extends AppCompatActivity {
                     return false;
                 }
             });
-    }
-
-    public void changeImage(int index) {
-        mSelectedImageIndex=index;
-        mBackgroundViewPager.setCurrentItem(index);
     }
 }

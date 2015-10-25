@@ -52,6 +52,7 @@ public class ImageCache {
     }
 
 
+
     public class BitmapWorkerTask extends AsyncTask<Object, Void, Bitmap> {
         private ImageView mImageView;
         private  Handler mHandler;
