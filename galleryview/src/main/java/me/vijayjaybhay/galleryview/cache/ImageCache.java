@@ -36,7 +36,7 @@ public class ImageCache {
 
     /**
      * Initializes memory cache and disk cache.
-     * @param context Application context
+     * @param context Context of application
      */
     private ImageCache(Context context){
         mContext=context;
@@ -46,8 +46,8 @@ public class ImageCache {
 
     /**
      * Initializes single instance of Image Cache.
-     * @param context Application context
-     * @return ImageCache object
+     * @param context Applicati
+     * @return ImageCahe object
      */
     public static ImageCache getInstance(Context context){
         if(mImageCache==null){
@@ -63,7 +63,7 @@ public class ImageCache {
      * @param imageView Image View to which resultant bitmap needs to be set
      */
     public void loadBitmap(Object item, ImageView imageView) {
-        final String imageKey = String.valueOf(item);
+        final String imageKey = String.valueOf(item.hashCode());
         Bitmap bitmap = mMemoryImageCache.getBitmapFromMemCache(imageKey);
         if (bitmap != null) {
             imageView.setImageBitmap(ThumbnailUtils.extractThumbnail(bitmap, 100, 100));
@@ -91,7 +91,7 @@ public class ImageCache {
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(Object... params) {
-            final String imageKey = String.valueOf(params[0]);
+            final String imageKey = String.valueOf(params[0].hashCode());
             //find in disk cache
             Bitmap bitmap = mDiskImageCache.getBitmapFromDiskCache(imageKey);
             if (bitmap == null) { // Not found in disk cache as well as memory cache

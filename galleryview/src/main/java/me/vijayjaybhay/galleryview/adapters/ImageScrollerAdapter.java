@@ -1,6 +1,7 @@
 package me.vijayjaybhay.galleryview.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class ImageScrollerAdapter extends BaseAdapter {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_galleryview_image, null);
         }
         imageView = (ImageView) view.findViewById(R.id.ivImageViewItem);
-        mImageCache.loadBitmap(mImages.get(position),imageView);
+        mImageCache.loadBitmap(mImages.get(position), imageView);
         return view;
     }
     @Override

@@ -1,6 +1,7 @@
 package me.vijayjaybhay.galleryview.cache;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -10,18 +11,6 @@ import android.support.v4.util.LruCache;
  * Created by Jaybhay Vijay on 10/24/2015.
  */
 public class MemoryImageCache {
-    /**
-     * Get max available VM memory, exceeding this amount will throw an
-     * OutOfMemory exception. Stored in kilobytes as LruCache takes an
-     * int in its constructor.
-     */
-    final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-    /**
-     * Use 1/8th of the available memory for this memory cache
-     */
-    final int cacheSize = maxMemory / 8;
-
     /**
      * LruCache for implementation of memory cache mechanism
      */
@@ -37,12 +26,12 @@ public class MemoryImageCache {
     private Context mContext;
 
     /**
-     * Initializes memory.
+     * Initializes memory cache
      * @param context Application context
      */
     private MemoryImageCache(Context context){
         mContext=context;
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+        mMemoryCache = new LruCache<String, Bitmap>(getCacheSize()) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 // The cache size will be measured in kilobytes rather than
@@ -64,6 +53,15 @@ public class MemoryImageCache {
         return mMemoryImageCache;
     }
 
+    /**
+     * Computes cache size
+     * @return maximum memory cache size
+     */
+    private int getCacheSize(){
+        ActivityManager am = (ActivityManager)mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        int memClassBytes = am.getMemoryClass() * 1024 * 1024;
+        return memClassBytes / 8;
+    }
     /**
      * Computes number of bytes in bitmap
      * @param data Bitmap data

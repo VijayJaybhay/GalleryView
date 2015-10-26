@@ -106,7 +106,6 @@ public class GalleryViewActivity extends AppCompatActivity {
         setHandlers();
     }
 
-
     /**
      * Sets references to UI elements
      */
@@ -169,7 +168,7 @@ public class GalleryViewActivity extends AppCompatActivity {
      */
     private void loadBackgroundImage(int position){
         mSelectedImageIndex=position;
-        String imageKey=String.valueOf(mImages.get(position));
+        String imageKey=String.valueOf(mImages.get(position).hashCode());
         MemoryImageCache memoryImageCache=MemoryImageCache.getInstance(GalleryViewActivity.this);
         Bitmap bitmap=memoryImageCache.getBitmapFromMemCache(imageKey);
         ImageCache imageCache=ImageCache.getInstance(GalleryViewActivity.this);

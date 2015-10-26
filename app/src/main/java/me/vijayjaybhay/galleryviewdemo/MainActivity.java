@@ -3,6 +3,7 @@ package me.vijayjaybhay.galleryviewdemo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
 import java.util.List;
 import me.vijayjaybhay.galleryview.GalleryViewActivity;
 import me.vijayjaybhay.galleryview.cache.DiskImageCache;
@@ -49,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 };
                 Intent intent = new Intent(GalleryViewActivity.ACTION_GALLERY_VIEW_ACTIVITY);
                 GalleryProperties props = new GalleryProperties();
-                //props.setDataSource(d);
-                //files= Utils.getFiles(Environment.getExternalStorageDirectory() + "/temp");
-                props.setDataSource(d);
+               // props.setDataSource(d);
+                files= Utils.getFiles(Environment.getExternalStorageDirectory() + "/temp");
+                props.setDataSource(files);
                 props.hideTitle(false);
                 props.setTitle("My Title for activity");
                 props.hideImageScroller(true);
@@ -61,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode==100){
             if(resultCode== Activity.RESULT_OK){
                 int index=data.getIntExtra(GalleryViewActivity.KEY_SELECTED_IMAGE_INDEX, 0);
-                String imageKey=String.valueOf(d[index]);
+                String imageKey=String.valueOf(files.get(index).hashCode());//for drawables use d[index]
                 MemoryImageCache memoryImageCache=MemoryImageCache.getInstance(MainActivity.this);
                 Bitmap bitmap=memoryImageCache.getBitmapFromMemCache(imageKey);
                 if(bitmap==null){
@@ -98,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                     bitmap=diskImageCache.getBitmapFromDiskCache(imageKey);
                 }
                 mImageView.setImageBitmap(bitmap);
-
             }else if(resultCode==Activity.RESULT_CANCELED){
 
             }

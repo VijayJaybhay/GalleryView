@@ -28,10 +28,10 @@ public class Utils {
     }
 
     /**
-     * Decodes item to Bitmap
-     * @param item Image resource or image file path
-     * @param context Context
-     * @return Bitmap for item
+     * Decodes bimap
+     * @param item
+     * @param context
+     * @return
      */
     public static Bitmap getBitmap(Object item,Context context){
         Bitmap bitmap=null;
