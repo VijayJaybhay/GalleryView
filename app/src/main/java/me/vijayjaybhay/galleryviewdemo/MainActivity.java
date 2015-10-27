@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(GalleryViewActivity.ACTION_GALLERY_VIEW_ACTIVITY);
                 GalleryProperties props = new GalleryProperties();
                // props.setDataSource(d);
-                files= Utils.getFiles(Environment.getExternalStorageDirectory() + "/temp");
-                props.setDataSource(files);
+                //files= Utils.getFiles(Environment.getExternalStorageDirectory() + "/temp");
+                props.setDataSource(d);
                 props.hideTitle(false);
-                props.setTitle("My Title for activity");
+                props.setTitle("Select Wallpaper");
                 props.hideImageScroller(true);
                 intent.putExtra(GalleryViewActivity.ARG_GALLERY_VIEW_PROPERTIES, props);
                 startActivityForResult(intent, 100);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode==100){
             if(resultCode== Activity.RESULT_OK){
                 int index=data.getIntExtra(GalleryViewActivity.KEY_SELECTED_IMAGE_INDEX, 0);
-                String imageKey=String.valueOf(files.get(index).hashCode());//for drawables use d[index]
+                String imageKey=String.valueOf(d[index]);//for drawables use d[index]
                 MemoryImageCache memoryImageCache=MemoryImageCache.getInstance(MainActivity.this);
                 Bitmap bitmap=memoryImageCache.getBitmapFromMemCache(imageKey);
                 if(bitmap==null){
