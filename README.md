@@ -1,15 +1,15 @@
 # GalleryView
 [ ![Download](https://api.bintray.com/packages/jaybhayvijay/maven/GalleryView/images/download.svg) ](https://bintray.com/jaybhayvijay/maven/GalleryView/_latestVersion)
 
-GalleryView is Open Source Android Project that is built with idea of Android Gallery Widget (which was deprecated now). Gallery View based on single activity GalleryViewActivity. You just need to pass it list of drawables or folder containing images. It renders images. To obtain performance benefits, it has implemented two way image cache (Memory and Disk Cache) to load images faster. 
+GalleryView is Open Source Android Project that is built with idea of Android Gallery Widget (which was deprecated now). Gallery View based on single activity GalleryViewActivity. You just need to pass it list of drawables or list of file paths. It renders images. To obtain performance benefits, it has implemented two way image cache (Memory and Disk Cache) to load images faster. 
 
 #Demo
-![GalleryView Demo](https://github.com/VijayJaybhay/GalleryView/tree/master/app/src/main/res/demo.gif)
+![GalleryView Demo](https://raw.githubusercontent.com/VijayJaybhay/GalleryView/master/app/src/main/res/demo.gif)
 
 #How to use?
 
 For drawables in res folder :
-```
+```java
   d = new int[]{
                         R.drawable.image1,
                         R.drawable.image2,
@@ -31,7 +31,7 @@ For drawables in res folder :
                 startActivityForResult(intent, 100);
  ```               
 and 
-```
+```java
  @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==100){
@@ -52,7 +52,7 @@ and
     }
 ```
 For image files on external/internal storage:
-```
+```java
  Intent intent = new Intent(GalleryViewActivity.ACTION_GALLERY_VIEW_ACTIVITY);
                 GalleryProperties props = new GalleryProperties();
                 files= Utils.getFiles(Environment.getExternalStorageDirectory() + "/temp");//directory containing images
@@ -65,7 +65,7 @@ For image files on external/internal storage:
  ```
  
  and 
- ```
+ ```java
   @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==100){
