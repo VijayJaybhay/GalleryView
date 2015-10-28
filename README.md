@@ -6,6 +6,14 @@ GalleryView is Open Source Android Project that is built with idea of Android Ga
 #Demo
 ![GalleryView Demo](https://raw.githubusercontent.com/VijayJaybhay/GalleryView/master/app/src/main/res/demo.gif)
 
+#Gradle
+```
+dependencies {
+    ...
+    compile 'me.vijayjaybhay.galleryview:galleryview:1.0.1'
+    ....
+}
+```
 #How to use?
 
 For drawables in res folder :
